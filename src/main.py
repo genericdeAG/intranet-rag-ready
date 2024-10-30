@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import scraper.html_fetcher as html_fetcher
 import parsing.js_detection as js_detection
 import parsing.html_parser as html_parser
-import llm.summarizer as summarize
+import llm.pretty_printer as pretty_print
 from models.website_content import WebsiteContent
 import os
 from dotenv import load_dotenv
@@ -15,8 +15,8 @@ DEFAULT_LANGUAGE = os.getenv('LANGUAGE', 'english')
 def run(url=DEFAULT_FILE_PATH, language=DEFAULT_LANGUAGE):
     soup = fetch_html_content(url)
     website_content_dict = parse_website_content(soup, url)
-    summary = summarize.gpt(website_content_dict, language)
-    print(summary)
+    # pretty = pretty_print.gpt(website_content_dict, language)
+    # print(pretty)
     
 # Fetches HTML content and handles JavaScript-dependent pages
 def fetch_html_content(url):
@@ -34,9 +34,10 @@ def parse_website_content(soup, url):
         language=html_parser.language(soup),
         title=html_parser.title(soup),
         headings=html_parser.headings(soup),
-        footer=html_parser.footer(soup),
+        spans=html_parser.span_texts(soup),
         texts=html_parser.texts(soup),
-        images=html_parser.images(soup)
+        images=html_parser.images(soup),
+        links=html_parser.links(soup),
     )
     return website_content.to_dict()
 

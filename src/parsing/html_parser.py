@@ -31,16 +31,19 @@ def images(soup):
     for img in img_tags:
         alt_text = img.get('alt', '')
         image_list.append(alt_text)
-    print(f'Images of the page: {image_list}')
+    print(f'Images of the page (alt text): {image_list}\n')
     return image_list
 
-def footer(soup):
-    footer = soup.body.find('footer')
-    if footer:
-        footer.extract()
-        footer_text = [text.get_text() for text in footer.find_all('p')]
-        print(f'Footer : {footer_text}\n')
-        return footer_text
+    
+def span_texts(soup):
+    spans_with_text = [span.get_text() for span in soup.find_all('span') if span.string]
+    print(f'Spans with text: {spans_with_text}\n')
+    return spans_with_text
+
+def links(soup):
+    links = [link.get('href') for link in soup.find_all('a', href=True)]
+    print(f'Links of the page: {links}\n')
+    return links
 
 def filter_texts(texts):
     # Define keywords to filter out cookie-related texts

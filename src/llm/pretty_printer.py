@@ -46,7 +46,7 @@ def gpt(website_content, language):
     completion = client.chat.completions.create(
     model="gpt-4o",
     messages=[
-        {"role": "system", "content": "You are a helpful assistant summarizing the content and information of landing pages."},
+        {"role": "system", "content": "You are a helpful assistant cleaning up the parsed, unstructured contents of a website."},
         {"role": "user", "content": prompt}
     ]
     )
