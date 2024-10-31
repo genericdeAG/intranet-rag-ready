@@ -1,34 +1,28 @@
 # web-summarizer
 
-This is a simple tool that scrapes a single website or landing pages for the most important information and feeds this data into a prompt to OpenAI's GPT4 API.
+This is a tool that scrapes a sharepoint site and cleans, transform and structures the data into markdown format. 
 
-It will return a short paragraphs summarizing and describing the brand/company, their products/services and other information of the website.
+The purpose of this is to integrate the data into a vector database, facilitating RAG applications.
+
+It is optimized for German language but will probably work for other languages as well.
 
 ## Requirements
-It works on Linux/MacOS and Windows. 
-
 Python 3.10 or higher is required.
 
-You need to have chrome chromedrivers installed.
-
-You need to have an OpenAI API key.
+You need to have an OpenAI API key or Azure OpenAI model deployed.
 
 ## Get started
 
-To get started copy copy the ``.env.template``and rename it to ``.env``. Add your OpenAI credentials and custom config here (language, default file path).
+To get started copy copy the ``.env.template``and rename it to ``.env``. Add your OpenAI / Azure OpenAI credentials and default file path if you want.
 
 Then install the packages with ``pip install -r requirements.txt``
 
-If you want to scrape local files, add the path to the file in the ``.env`` file and add it in the data folder.
+## Run tool with CLI commands
 
-## Run summarizer with CLI commands
+``python src/main.py`` (uses default file path from ``.env``)
 
-``python src/main.py`` (uses default file path and language from ``.env``)
+``python src/main.py data/intranet_homepage.html`` (uses specified html file)
 
-``python src/main.py --language Schwäbisch`` (uses default file path and specified language)
+``python src/main.py https://www.my-company.sharepoint.com`` (uses specified url, only works for public sharepoint sites)
 
-``python src/main.py https://www.generic.de`` (uses specified url and default language from ``.env``)
-
-``python src/main.py https://www.generic.de -l English`` (uses specified url and specified language)
-
-### Contact me if you have ideas for improvemens for feature requests.
+### Contact me if you have feedback or feature requests.
