@@ -10,17 +10,11 @@ client = AzureOpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
-# load the content of the markdown file
-def load_md(path):
-    with open(path, 'r', encoding='utf-8') as file:
-        return file.read()
-
 # this function builds the prompt for the LLM and returns the complete prompt as a string
-def build_prompt(path):
-    md_string = load_md(path)
+def build_prompt(json):
     with open('src/llm/prompt.txt', 'r', encoding='utf-8') as f:
         template = f.read()
-    prompt = template.replace('{{Datei}}', md_string)
+    prompt = template.replace('{{Datei}}', json)
     print(prompt)
     return prompt
 
@@ -32,7 +26,7 @@ def gpt(website_content):
     model=MODEL_NAME,
     temperature=0.3,
     messages=[
-        {"role": "system", "content": "You are a helpful assistant cleaning up the parsed, unstructured contents of a website."},
+        {"role": "system", "content": "You are a helpful assistant cleaning up the parsed, unstructured contents of a sharepoint page in JSON format."},
         {"role": "user", "content": prompt}
     ]
     )

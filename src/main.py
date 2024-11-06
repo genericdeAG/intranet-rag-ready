@@ -1,30 +1,70 @@
 import argparse
-import parsing.content_parser as content_parser
-import utils.http_client as http_client
 import os
 from dotenv import load_dotenv
 import utils.md_converter as md_converter
 import llm.pretty_printer as pretty_print
+import asyncio
+from factories.msgraph_client_factory import MSGraphClientFactory
 
 load_dotenv()
 DEFAULT_FILE_PATH = os.getenv('DEFAULT_FILE_PATH')
 
-def run(url=DEFAULT_FILE_PATH):
-    soup = http_client.fetch_html_content(url)
-    website_content_dict = content_parser.parse_website_content(soup, url)
-    # Convert dict to markdown
-    markdown_output = md_converter.convert_to_md(website_content_dict)
-    # Generate filename from title or URL
-    filename = website_content_dict.get('title', 'extract').replace(' ', '_')
-    # Save to file and get the file path
-    saved_path = md_converter.save_md_to_file(filename, markdown_output)
+async def process_sharepoint_site(site_id: str, use_mock: bool) -> None:
+    """Process all pages and webparts for a SharePoint site
     
-    pretty = pretty_print.gpt(saved_path)
-    # Save the pretty printed markdown to a file
-    md_converter.save_md_to_file(f"{filename}_pretty", pretty)
+    Args:
+        site_id: The ID of the SharePoint site
+        use_mock: Whether to use mock client instead of real one
+    """
+    print(use_mock)
+    # Get appropriate client instance
+    graph_client = MSGraphClientFactory.get_client(use_mock=use_mock)
+    
+    # Get all pages for the site
+    pages = await graph_client.get_sharepoint_site_pages(site_id)
+    print(pages)
+    
+    if pages and "value" in pages:
+        for page in pages["value"]:
+            print(page)
+            page_id = page["id"]
+            # Get webparts for each page
+            webparts = await graph_client.get_sharepoint_site_page_webparts(site_id, page_id)
+            print(webparts)
+            if webparts:
+                # Process webparts through GPT
+                pretty = pretty_print.gpt(webparts)
+                # Save the processed markdown
+                md_converter.save_md_to_file(f"{page_id}_pretty", pretty)
+
+def run(use_mock: bool = False) -> None:
+    """Main run function for processing SharePoint content
+    
+    Args:
+        use_mock: Whether to use mock client
+    """
+    site_id_dict = {
+        "mitarbeiter": os.getenv("SITE_ID_1"),
+        "corporate": os.getenv("SITE_ID_2")
+    }
+    
+    # Process content based on site IDs
+    for site_id in site_id_dict.items():
+        if site_id:
+            asyncio.run(process_sharepoint_site(site_id, use_mock))
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Summarize website content.')
-    parser.add_argument('url', nargs='?', default=DEFAULT_FILE_PATH, help='URL or file path of the website to summarize')
+    parser = argparse.ArgumentParser(description='Summarize website content or fetch SharePoint pages.')
+    parser.add_argument('--sharepoint', action='store_true', help='Fetch SharePoint site pages')
+    parser.add_argument('--site-id', help='SharePoint site ID')
+    parser.add_argument('--mock', action='store_true', help='Use mock client instead of real one')
+    
     args = parser.parse_args()
-    run(args.url)
+    
+    if args.sharepoint:
+        if args.site_id:
+            asyncio.run(process_sharepoint_site(args.site_id, args.mock))
+        else:
+            run(use_mock=args.mock)
+    else:
+        run(args.url, args.mock)

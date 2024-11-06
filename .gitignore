@@ -25,3 +25,6 @@ MANIFEST
 
 .env
 data/*
+
+activate.bat
+venv310/
