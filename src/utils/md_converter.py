@@ -36,5 +36,5 @@ def save_md_to_file(filename, md_content):
     # Write content to file
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(md_content)
-    
+    print(f"File saved to: {file_path}")
     return file_path

@@ -26,5 +26,5 @@ MANIFEST
 .env
 data/*
 
-activate.bat
+activate.ps1
 venv310/

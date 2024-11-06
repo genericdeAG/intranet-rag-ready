@@ -14,8 +14,9 @@ client = AzureOpenAI(
 def build_prompt(json):
     with open('src/llm/prompt.txt', 'r', encoding='utf-8') as f:
         template = f.read()
-    prompt = template.replace('{{Datei}}', json)
-    print(prompt)
+    # Convert the json dictionary to a string
+    json_str = str(json)
+    prompt = template.replace('{{Datei}}', json_str)
     return prompt
 
 # this function sends the prompt to the LLM and returns the response
@@ -26,7 +27,7 @@ def gpt(website_content):
     model=MODEL_NAME,
     temperature=0.3,
     messages=[
-        {"role": "system", "content": "You are a helpful assistant cleaning up the parsed, unstructured contents of a sharepoint page in JSON format."},
+        {"role": "system", "content": "You are a helpful assistant cleaning up the parsed, unstructured contents of a sharepoint page in JSON format and convert it to markdown."},
         {"role": "user", "content": prompt}
     ]
     )

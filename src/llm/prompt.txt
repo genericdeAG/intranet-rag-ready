@@ -1,56 +1,38 @@
+<Hintergrund>
+Du bekommst unten eine JSON Datei, welche von dem Firmeninternen Sharepoint mit der Microsoft Graph API exportiert wurde.
+</Hintergrund>
 <Aufgabe>
-Entferne alle Elemente in zweiter Ebene (also ##), die nicht den Inhalt betreffen aber beim parsen trotzdem mitrausgekommen sind. Dies beeinhaltet zum Beispiel:
+Extrahiere alle Elemente, die den Inhalt der Sharepoint Page betreffen oder relevant sein könnten. Beachte alle Objekte innerhalb des value[] Arrays.
+
+Ignoriere dabei alle Elemente, die nicht den Inhalt oder nur den Kontext der Sharepoint Page betreffen. Zum Beispiel:
 - Namen ohne Kontext (z.B. "Joshua Heller", "Moritz Obermüller")
-- Daten ohen Kontext (z.B. "SharePoint", 
+- Daten ohen Kontext (z.B. "2024", "15.09.2024")
 - Navigationselemente ohne Zusammenhang mit den Inhalt (z.B. "Eigene Dateien", "Meine Websites")
 - Texte, die irgendwie vom Intranet kommen, aber keinen sinnvollen Inhalt haben ("69-mal angezeigt", "Gefällt mir", "Für später speichern", "")
 - allgemeine Links oder Links die der Interaktion im Sharepoint dienen, aber nicht inhaltlich sind (z.B. "https://www.generic.de/", "https://genericde.sharepoint.com/_layouts/15/spappbar.aspx?workload=create"
-Achte darauf, dass du keine Inhalte entfernst die wichtig sein könnte und Teil des Inhalts sein könnten. Wenn z.B. der Name oder ein Datum Teil eines Fließtextes ist oder Zusammenhang damit stehen könnte, behalte ihn. Behalte Links, die zur Seite und dessen Inhalt gehören könnten (z.B. "https://genericde.sharepoint.com/sites/mitarbeiter/SitePages/Reisen-Mobilit%C3%A4t-Spesen.aspx" beim Thema Zeiterfassung)
-</Aufgabe>      
+- IDs oder URLs, welche Metainformationen der Graph API beinhalten (z.B. "@odata.context", "@microsoft.graph.tips")
+
+Achte darauf, dass du keine Inhalte entfernst die wichtig sein könnte und Teil des Inhalts sein könnten. Wenn z.B. der Name oder ein Datum Teil eines Fließtextes ist oder Zusammenhang damit stehen könnte, behalte ihn.
+</Aufgabe>
 
 <Output Format>
-Behalte alle Elemente in erster Ebene (also #) bei und verändere nicht dessen Name.
+Gib mir die gesäubterten Inhalte strukturiert als markdown aus.
+Übernehme dabei weitestgehend die Struktur der HTML Tags, falls diese vorhanden sind. Wenn nicht mache die Formattierung nach bestem Wissen und Gewissen nach Markdown Best practices.
+Z.B.: 
+    <h1>Title</h1> sollte zu "# Title" werden
+    <h2>Subtitle</h2> sollte zu "## Subtitle" werden
+    <h3>Subsubtitle</h3> sollte zu "### Subsubtitle" werden
+    <p>Text</p> sollte zu "Text" werden
+    <a>Link</a> sollte zu "[Link](Link)" werden
+    <strong>Text</strong> sollte zu "**Text**" werden
+
+Wenn es Text gibt, der nicht innerhalb eines HTML Tags ist, mache die Formattierung nach bestem Wissen und Gewissen nach Markdown Best practices, aber passe es an den Rest deines Outputs an.
+
 Achte darauf vor jedem Element in erster, zweiter und dritter Ebene (also #, ## und ###) eine Leerzeile beizubehalten.
 Nach einem Element in erster, zweiter oder dritter Ebene (also #, ## oder ###) darf keine Leerzeile sein. Außer es macht wirklich Sinn.
-Entscheide welche Elemente in zweiter Ebene (also ##) und welche in dritter Ebene (also ###) sein könnten und strukturiere dementsprechend.
-Gib alle Texte, die Fließtextelemente zu scheinen sind, wie normalen Text (also ohne Hashtags) aus.
+
 Gib nur das markdown aus, nichts weiter.
 </Output Format>
-
-<Beispiel>
-# Zeiterfassung  
-   
-## HINWEIS ZUR NAVIGATION  
-   
-Über die globale Navigation (linke Seite generic.de-Logo) gelangst Du zu den jeweiligen Menüpunkten.  
-   
-## Gäste-WLAN  
-   
-SSID: generic.de-Guest    
-Parole: Surf_The_Green_Wave!  
-   
-## EDITOR'S CORNER  
-   
-Du möchtest eine neue Seite im Intranet anlegen oder etwas bearbeiten? Du benötigst eine Bearbeiterrolle? Dann findest Du hier alle wichtigen Informationen.  
-   
-## TOP-NEWS Unternehmen  
-   
-### Neue interne Meldestelle gemäß Hinweisgeberschutzgesetz (HinSchG)  
-   
-### Wir haben den Allianz Industrie 4.0 Award gewonnen! 🙌🍾  
-   
-### Wir sind live – mit dem neuen Intranet!  
-   
-## Links
-   
-[Allianz Industrie 4.0 Award](https://genericde.sharepoint.com/sites/Corporate/SitePages/Allianz-Industrie-4.0-Award.aspx)  
-   
-[Wir sind live](https://genericde.sharepoint.com/sites/Corporate/SitePages/Wir-sind-live.aspx)  
-   
-[Onboarding Prozess 2.0](https://genericde.sharepoint.com/sites/mitarbeiter/SitePages/Onboarding-Prozess-2.0.aspx)  
-   
-[Dummy Konzept](https://genericde.sharepoint.com/sites/cleandevelopment/SitePages/Dummy-Konzept.aspx)
-</Beispiel>
 
 <Datei>
 {{Datei}}

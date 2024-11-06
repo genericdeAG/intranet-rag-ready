@@ -16,55 +16,41 @@ async def process_sharepoint_site(site_id: str, use_mock: bool) -> None:
         site_id: The ID of the SharePoint site
         use_mock: Whether to use mock client instead of real one
     """
-    print(use_mock)
     # Get appropriate client instance
     graph_client = MSGraphClientFactory.get_client(use_mock=use_mock)
     
     # Get all pages for the site
     pages = await graph_client.get_sharepoint_site_pages(site_id)
-    print(pages)
     
     if pages and "value" in pages:
         for page in pages["value"]:
-            print(page)
             page_id = page["id"]
             # Get webparts for each page
             webparts = await graph_client.get_sharepoint_site_page_webparts(site_id, page_id)
-            print(webparts)
             if webparts:
                 # Process webparts through GPT
                 pretty = pretty_print.gpt(webparts)
                 # Save the processed markdown
-                md_converter.save_md_to_file(f"{page_id}_pretty", pretty)
+                md_converter.save_md_to_file(f"{page_id}", pretty)
 
-def run(use_mock: bool = False) -> None:
+def run(site_id: str = os.getenv("SITE_ID_1"), use_mock: bool = False) -> None:
     """Main run function for processing SharePoint content
     
     Args:
         use_mock: Whether to use mock client
     """
-    site_id_dict = {
-        "mitarbeiter": os.getenv("SITE_ID_1"),
-        "corporate": os.getenv("SITE_ID_2")
-    }
     
     # Process content based on site IDs
-    for site_id in site_id_dict.items():
-        if site_id:
-            asyncio.run(process_sharepoint_site(site_id, use_mock))
+    asyncio.run(process_sharepoint_site(site_id, use_mock))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Summarize website content or fetch SharePoint pages.')
-    parser.add_argument('--sharepoint', action='store_true', help='Fetch SharePoint site pages')
     parser.add_argument('--site-id', help='SharePoint site ID')
     parser.add_argument('--mock', action='store_true', help='Use mock client instead of real one')
     
     args = parser.parse_args()
     
-    if args.sharepoint:
-        if args.site_id:
-            asyncio.run(process_sharepoint_site(args.site_id, args.mock))
-        else:
-            run(use_mock=args.mock)
+    if args.site_id:
+        asyncio.run(process_sharepoint_site(args.site_id, args.mock))
     else:
-        run(args.url, args.mock)
+        run(use_mock=args.mock)
