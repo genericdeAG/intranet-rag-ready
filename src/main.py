@@ -52,12 +52,22 @@ def run(site_id: str = os.getenv("SITE_ID_1"), use_mock: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Summarize website content or fetch SharePoint pages.')
-    parser.add_argument('--site-id', help='SharePoint site ID')
+    parser.add_argument('--site-id', help='SharePoint site ID or site number (1, 2, etc.) to draw from env')
     parser.add_argument('--mock', action='store_true', help='Use mock client instead of real one')
     
     args = parser.parse_args()
     
     if args.site_id:
-        asyncio.run(process_sharepoint_site(args.site_id, args.mock))
+        # Check if the input is a number
+        if args.site_id.isdigit():
+            # Get the site ID from environment variable (e.g., SITE_ID_1, SITE_ID_2)
+            env_site_id = os.getenv(f"SITE_ID_{args.site_id}")
+            if not env_site_id:
+                raise ValueError(f"No site ID found in environment for number {args.site_id}")
+            site_id = env_site_id
+        else:
+            site_id = args.site_id
+            
+        asyncio.run(process_sharepoint_site(site_id, args.mock))
     else:
         run(use_mock=args.mock)
