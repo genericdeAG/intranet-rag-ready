@@ -25,13 +25,20 @@ async def process_sharepoint_site(site_id: str, use_mock: bool) -> None:
     if pages and "value" in pages:
         for page in pages["value"]:
             page_id = page["id"]
+            page_url = page["webUrl"]
+            # get the site name from the page url. It is after the "sites/" and before the next "/"
+            site_name = page_url.split("/sites/")[1].split("/")[0]
+            page_name = page["name"]
+            print(f"Processing page: {page_url}")
             # Get webparts for each page
             webparts = await graph_client.get_sharepoint_site_page_webparts(site_id, page_id)
             if webparts:
                 # Process webparts through GPT
                 pretty = pretty_print.gpt(webparts)
+                # add page url at the beginning of the markdown with two newlines afterwards
+                pretty = f"PAGE URL: {page_url}\n\n{pretty}"
                 # Save the processed markdown
-                md_converter.save_md_to_file(f"{page_id}", pretty)
+                md_converter.save_md_to_file(f"{site_name}_{page_name}", pretty)
 
 def run(site_id: str = os.getenv("SITE_ID_1"), use_mock: bool = False) -> None:
     """Main run function for processing SharePoint content

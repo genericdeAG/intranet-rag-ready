@@ -34,6 +34,70 @@ Nach einem Element in erster, zweiter oder dritter Ebene (also #, ## oder ###) d
 Gib nur das markdown aus, nichts weiter.
 </Output Format>
 
+<Beispiel>
+## Enticy
+
+[Enticy](https://enticy.azurewebsites.net/#/timecontrol)
+
+# Zeiterfassung
+
+Die Zeiterfassung erfolgt über Enticy.
+
+Die Buchungen sollen spätestens am darauffolgenden Kalendertag erfasst werden. **Bucht also generell Eure Zeiten zeitnah (max. 2-3 Tage Versatz) und achtet auf die Richtigkeit. Bucht Eure Zeiten nicht erst am Ende des Monats oder für den ganzen Monat im Voraus. Am letzten Arbeitstag des Monats sind alle Buchungen bis spätestens 18:00 Uhr vorzunehmen.**
+
+# Projekte
+
+Eure Arbeitszeit muss immer dem richtigen Projekt zugeordnet sein.
+
+Beispiel AHI:
+
+Die Zeiten für das AHI werden immer folgendem Projekt zugeordnet: *generic.de > Intern > AHI*
+
+# Leistungspakete
+
+In manchen unserer Projekte werden Projekte mit Leistungspaketen versehen, die dem Kunden bekannt sind und abgerechnet werden. Damit wir hier zuverlässig und transparent arbeiten können, wurden diese auch in die Zeiterfassung eingebunden.
+
+Beispiele:
+
+1. Entwicklungs- und Supportaufwände...
+2. Discovery Phasen...
+
+... bei Mitarbeiter:innen werden dem Kunden transparent und getrennt voneinander ausgewiesen.
+
+Diese Buchungsmaske wird nur den Projekten zur Verfügung stehen, bei denen auch Leistungspakete vorhanden sind. Für alle anderen bleibt dieses Feld unsichtbar und es ändert sich nichts.
+
+Bitte achtet in Projekten mit Leistungspaketen darauf, dass Ihr das richtige Leistungspaket ausgewählt habt. Standardmäßig wird das erste Leistungspaket ausgewählt und eine Buchung ohne Leistungspaket ist dann nicht möglich.
+
+# Quicklinks
+
+## Wie buche ich meine Fahrzeiten?
+
+[Fahrzeiten](https://genericde.sharepoint.com/sites/mitarbeiter/SitePages/Reisen-Mobilit%c3%a4t-Fahrzeiten.aspx)
+
+## Wie buche ich meine Verpflegungspauschale?
+
+[Spesen](https://genericde.sharepoint.com/sites/mitarbeiter/SitePages/Reisen-Mobilit%c3%a4t-Spesen.aspx)
+
+# Redaktion
+
+- **Slava Markert**
+  - Personalreferent:in
+  - Human Relations & Empowerment
+  - slava.markert@generic.de
+
+- **Carola Neumann**
+  - Assistenz Human Resources & Office Management
+  - Human Relations & Empowerment
+  - Carola.Neumann@generic.de
+
+# Technischer Ansprechpartner
+
+- **Timucin Karatas**
+  - Softwareentwickler
+  - Software-Entwicklung
+  - Timucin.Karatas@generic.de
+</Beispiel>
+
 <Datei>
 {{Datei}}
 </Datei>
