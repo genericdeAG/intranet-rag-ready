@@ -27,6 +27,7 @@ Z.B.:
     <strong>Text</strong> sollte zu "**Text**" werden
 
 Wenn es Text gibt, der nicht innerhalb eines HTML Tags ist, mache die Formattierung nach bestem Wissen und Gewissen nach Markdown Best practices, aber passe es an den Rest deines Outputs an.
+Es sollen keine HTML Tags mehr in deinem Output enthalten sein.
 
 Achte darauf vor jedem Element in erster, zweiter und dritter Ebene (also #, ## und ###) eine Leerzeile beizubehalten.
 Nach einem Element in erster, zweiter oder dritter Ebene (also #, ## oder ###) darf keine Leerzeile sein. Außer es macht wirklich Sinn.
