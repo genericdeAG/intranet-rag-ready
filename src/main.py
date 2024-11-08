@@ -2,6 +2,7 @@ import argparse
 import os
 from dotenv import load_dotenv
 import utils.md_converter as md_converter
+import utils.md_splitter as md_splitter
 import llm.pretty_printer as pretty_print
 import asyncio
 from factories.msgraph_client_factory import MSGraphClientFactory
@@ -40,34 +41,73 @@ async def process_sharepoint_site(site_id: str, use_mock: bool) -> None:
                 # Save the processed markdown
                 md_converter.save_md_to_file(f"{site_name}_{page_name}", pretty)
 
+def chunk_markdown_files(input_dir: str = None) -> None:
+    """Process existing markdown files and split them into chunks.
+    
+    Args:
+        input_dir: Directory containing markdown files to process. 
+                  Defaults to data/extracts if not specified.
+    """
+    # Use default directory if none specified
+    if not input_dir:
+        input_dir = os.path.join('data', 'extracts')
+    
+    # Ensure directory exists
+    if not os.path.exists(input_dir):
+        raise ValueError(f"Directory not found: {input_dir}")
+        
+    chunks_dict = md_splitter.process_markdown_directory(input_dir)
+    
+    chunks_dir = os.path.join('data', 'chunks')
+    md_splitter.save_chunks_per_file(chunks_dict, chunks_dir)
+    
+    total_chunks = sum(len(chunks) for chunks in chunks_dict.values())
+    print(f"Processed {total_chunks} chunks from markdown files")
+
 def run(site_id: str = os.getenv("SITE_ID_1"), use_mock: bool = False) -> None:
     """Main run function for processing SharePoint content
     
     Args:
         use_mock: Whether to use mock client
     """
-    
     # Process content based on site IDs
     asyncio.run(process_sharepoint_site(site_id, use_mock))
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Summarize website content or fetch SharePoint pages.')
-    parser.add_argument('--site-id', help='SharePoint site ID or site number (1, 2, etc.) to draw from env')
-    parser.add_argument('--mock', action='store_true', help='Use mock client instead of real one')
+    parser = argparse.ArgumentParser(description='Process SharePoint pages and chunk markdown files.')
+    
+    # Create subparsers for different commands
+    subparsers = parser.add_subparsers(dest='command', help='Command to execute')
+    
+    # Parser for the sharepoint command
+    sp_parser = subparsers.add_parser('sharepoint', help='Process SharePoint sites')
+    sp_parser.add_argument('--site-id', help='SharePoint site ID or site number (1, 2, etc.) to draw from env')
+    sp_parser.add_argument('--mock', action='store_true', help='Use mock client instead of real one')
+    
+    # Parser for the chunk command
+    chunk_parser = subparsers.add_parser('chunk', help='Chunk existing markdown files')
+    chunk_parser.add_argument('--input-dir', help='Directory containing markdown files to process')
     
     args = parser.parse_args()
     
-    if args.site_id:
-        # Check if the input is a number
-        if args.site_id.isdigit():
-            # Get the site ID from environment variable (e.g., SITE_ID_1, SITE_ID_2)
-            env_site_id = os.getenv(f"SITE_ID_{args.site_id}")
-            if not env_site_id:
-                raise ValueError(f"No site ID found in environment for number {args.site_id}")
-            site_id = env_site_id
+    if args.command == 'sharepoint':
+        if args.site_id:
+            # Check if the input is a number
+            if args.site_id.isdigit():
+                # Get the site ID from environment variable (e.g., SITE_ID_1, SITE_ID_2)
+                env_site_id = os.getenv(f"SITE_ID_{args.site_id}")
+                if not env_site_id:
+                    raise ValueError(f"No site ID found in environment for number {args.site_id}")
+                site_id = env_site_id
+            else:
+                site_id = args.site_id
+                
+            asyncio.run(process_sharepoint_site(site_id, args.mock))
         else:
-            site_id = args.site_id
+            run(use_mock=args.mock)
             
-        asyncio.run(process_sharepoint_site(site_id, args.mock))
+    elif args.command == 'chunk':
+        chunk_markdown_files(args.input_dir)
     else:
-        run(use_mock=args.mock)
+        # Default to original behavior if no command specified
+        run(use_mock=False)
