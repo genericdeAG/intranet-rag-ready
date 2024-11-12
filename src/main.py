@@ -36,8 +36,9 @@ async def process_sharepoint_site(site_id: str, use_mock: bool) -> None:
             if webparts:
                 # Process webparts through GPT
                 pretty = pretty_print.gpt(webparts)
-                # add page url at the beginning of the markdown with two newlines afterwards
-                pretty = f"PAGE URL: {page_url}\n\n{pretty}"
+                # Remove .aspx extension from page_name if it exists
+                clean_page_name = page_name.replace('.aspx', '')
+                pretty = f"PAGE URL: {page_url}\nSITE: {site_name}\nSITEPAGE: {clean_page_name}\n\n{pretty}"
                 # Save the processed markdown
                 md_converter.save_md_to_file(f"{site_name}_{page_name}", pretty)
 
