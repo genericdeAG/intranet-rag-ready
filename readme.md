@@ -54,6 +54,15 @@ python src/main.py chunk --input-dir path/to/directory
 ## Mocking the Graph API (data)
 Get data from Graph Explorer (Sharepoint API) and put json files in data/ms-graph/
 
+1. request: https://graph.microsoft.com/v1.0/sites/{hostname}:/sites/{sitename}
+- siteID (for next request)
+
+2. request: https://graph.microsoft.com/v1.0/sites/{site-id}/pages
+- lists all SitePage-IDs from site (for next request)
+
+3. request: https://graph.microsoft.com/v1.0/sites/{site-id}/pages/{sitePageID}/microsoft.graph.sitepage/webparts
+- gets all webparts of a SitePage
+
 ### Folder 1: list-all-pages
 - File names: identical to site ID
 
